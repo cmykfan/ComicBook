@@ -9,9 +9,7 @@
 <table class="table table-striped">
     <thread>
         <tr>
-            <th>
-                Name
-            </th>
+            <th>Name</th>
             <th></th>
         </tr>
     </thread>
@@ -24,6 +22,29 @@
                 </td>
                 <td>
                     @Html.ActionLink("Detail,", "TitleDetail", new { id = Model.Titles[i].TitleId })
+                    | @Html.ActionLink("Edit", "TitleEdit", new { id = Model.Titles[i].TitleId })
+                    | <a data-toggle="modal" href="@("#deleteTitleModal" + i)">Delete</a>
+                    <div class="modal fade" id="@("deleteTitleModal" + i)" tabindex="-1" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                @using (Html.BeginForm("DeleteTitle", "Title"))
+                                {
+                                    <input type="hidden" value="@Model.Titles[i].TitleId" name="TitleId" />
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Delete @Model.Titles[i].FullName</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete @Model.Titles[i].FullName?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Yes</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         }

@@ -124,5 +124,21 @@ namespace ComicBook.Controllers
             return new HttpNotFoundResult();
         }
 
+        [HttpPost]
+        public ActionResult DeleteTitle(TitleViewModel titleViewModel)
+        {
+            var title = Titles.SingleOrDefault(p => p.TitleId == titleViewModel.TitleId);
+
+            if (title != null)
+            {
+                title.Name = titleViewModel.Name;
+                title.Artist = titleViewModel.Artist;
+
+                return RedirectToAction("Index");
+            }
+
+            return new HttpNotFoundResult();
+        }
+
     }
 }
