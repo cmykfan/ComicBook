@@ -30,9 +30,26 @@ namespace ComicBook.Controllers
         };
 
         public ActionResult Index()
+        {
+            var titleList = new TitleListViewModel
+            {
+                Titles = Titles.Select(p => new TitleViewModel
+                {
+                    TitleId = p.TitleId,
+                    Name = p.Name,
+                    Artist = p.Artist
+                }).ToList()
+            };
+
+            titleList.TotalTitles = titleList.Titles.Count;
+
+            return View(titleList);
+        }
+
         public ActionResult TitleDetail(int id)
         {
-            var title = Tilte.SingleOrDefault(p => p.TitleId == id);
+            var title = Titles.SingleOrDefault(p => p.TitleId == id);
+
             if (title != null)
             {
                 var titleViewModel = new TitleViewModel
@@ -47,19 +64,65 @@ namespace ComicBook.Controllers
 
             return new HttpNotFoundResult();
         }
+
+        public ActionResult TitleAdd()
+        {
+            var titleViewModel = new TitleViewModel();
+
+            return View("AddEditTitle", titleViewModel);
+        }
+
+        public ActionResult TitleEdit(int id)
+        {
+            var title = Titles.SingleOrDefault(p => p.TitleId == id);
+
+            if (title != null)
             {
-                var titleList = new TitleListViewModel
+                var titleViewModel = new TitleViewModel
                 {
-                    Titles = Titles.Select(p => new TitleViewModel
-                    {
-                        TitleId = p.TitleId,
-                        Name = p.Name,
-                        Artist = p.Artist
-                    }).ToList()
+                    TitleId = title.TitleId,
+                    Name = title.Name,
+                    Artist = title.Artist
                 };
 
-            titleList.TotalTitles = titleList.Titles.Count;
-            return View(titleList);
+                return View("AddEditTitle", titleViewModel);
+            }
+
+            return new HttpNotFoundResult();
         }
+
+        [HttpPost]
+        public ActionResult AddTitle(TitleViewModel titleViewModel)
+        {
+            var nextTitleId = Titles.Max(p => p.TitleId) + 1;
+
+            var title = new Title
+            {
+                TitleId = nextTitleId,
+                Name = titleViewModel.Name,
+                Artist = titleViewModel.Artist
+            };
+
+            Titles.Add(title);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult EditTitle(TitleViewModel titleViewModel)
+        {
+            var title = Titles.SingleOrDefault(p => p.TitleId == titleViewModel.TitleId);
+
+            if (title != null)
+            {
+                title.Name = titleViewModel.Name;
+                title.Artist = titleViewModel.Artist;
+
+                return RedirectToAction("Index");
+            }
+
+            return new HttpNotFoundResult();
+        }
+
     }
 }

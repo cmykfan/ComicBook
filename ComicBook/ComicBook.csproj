@@ -113,6 +113,7 @@
     <Content Include="Views\Title\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Title\TitleDetail.cshtml" />
+    <Content Include="Views\Title\AddEditTitle.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

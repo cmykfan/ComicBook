@@ -12,6 +12,7 @@
             <th>
                 Name
             </th>
+            <th></th>
         </tr>
     </thread>
     <tbody>
@@ -21,10 +22,19 @@
                 <td>
                     @Model.Titles[i].FullName
                 </td>
+                <td>
+                    @Html.ActionLink("Detail,", "TitleDetail", new { id = Model.Titles[i].TitleId })
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
-Total Titles: @Model.TotalTitles
+<div class="col-sm-12 form-group">
+    <lable>Total Titles:</lable> @Model.TotalTitles
+</div>
+
+<div class="col-sm-12">
+    @Html.ActionLink("Add Title", "TitleAdd", null, new { @class = "btn btn-primary" })
+</div>
 
