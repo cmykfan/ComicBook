@@ -10,56 +10,64 @@ namespace ComicBook.Controllers
     public class TitleController : Controller
     {
         // GET: Title
-        public static List<Title> Titles = new List<Title>
-        {
-            new Title { TitleId = 1, Name = "Hellboy", Artist = "Mike Mignola" },
-            new Title { TitleId = 2, Name = "The Incredible Hulk", Artist = "Jack Kirby" },
-            new Title { TitleId = 3, Name = "Spider-Man", Artist = "Steve Ditko" },
-            new Title { TitleId = 4, Name = "X-Men", Artist = "John Byrne" },
-            new Title { TitleId = 5, Name = "Airtight Garage", Artist = "Moebius" },
-            new Title { TitleId = 6, Name = "Dr. Strange", Artist = "Steve Ditko" },
-            new Title { TitleId = 7, Name = "Silver Surfer", Artist = "Ron Lim" },
-            new Title { TitleId = 8, Name = "Warlock", Artist = "Jim Starlin" },
-            new Title { TitleId = 9, Name = "Swamp Thing", Artist = "Steve Bissette" },
-            new Title { TitleId = 10, Name = "Nexus", Artist = "Steve Rude" },
-            new Title { TitleId = 11, Name = "Captain America", Artist = "Jack Kirby" },
-            new Title { TitleId = 12, Name = "Sandman", Artist = "P. Craig Russell" },
-            new Title { TitleId = 13, Name = "Concrete", Artist = "Paul Chadwick" },
-            new Title { TitleId = 14, Name = "The Spirit", Artist = "Will Eisner" },
-            new Title { TitleId = 15, Name = "Daredevil", Artist = "Frank Miller" }
-        };
+        //public static List<Title> Titles = new List<Title>  Remove this now that we are adding to Database - Migrations.
+        //{
+            //new Title { TitleId = 1, Name = "Hellboy", Artist = "Mike Mignola" },
+            //new Title { TitleId = 2, Name = "The Incredible Hulk", Artist = "Jack Kirby" },
+            //new Title { TitleId = 3, Name = "Spider-Man", Artist = "Steve Ditko" },
+            //new Title { TitleId = 4, Name = "X-Men", Artist = "John Byrne" },
+            //new Title { TitleId = 5, Name = "Airtight Garage", Artist = "Moebius" },
+            //new Title { TitleId = 6, Name = "Dr. Strange", Artist = "Steve Ditko" },
+            //new Title { TitleId = 7, Name = "Silver Surfer", Artist = "Ron Lim" },
+            //new Title { TitleId = 8, Name = "Warlock", Artist = "Jim Starlin" },
+            //new Title { TitleId = 9, Name = "Swamp Thing", Artist = "Steve Bissette" },
+            //new Title { TitleId = 10, Name = "Nexus", Artist = "Steve Rude" },
+            //new Title { TitleId = 11, Name = "Captain America", Artist = "Jack Kirby" },
+            //new Title { TitleId = 12, Name = "Sandman", Artist = "P. Craig Russell" },
+            //new Title { TitleId = 13, Name = "Concrete", Artist = "Paul Chadwick" },
+            //new Title { TitleId = 14, Name = "The Spirit", Artist = "Will Eisner" },
+            //new Title { TitleId = 15, Name = "Daredevil", Artist = "Frank Miller" }
+        //};
 
         public ActionResult Index()
         {
-            var titleList = new TitleListViewModel
+            using (var comicbookContext = new ComicBookContext())
             {
-                Titles = Titles.Select(p => new TitleViewModel
+                var titleList = new TitleListViewModel 
                 {
-                    TitleId = p.TitleId,
-                    Name = p.Name,
-                    Artist = p.Artist
-                }).ToList()
-            };
+                    Titles = comicbookContext.Titles.Select(p => new TitleViewModel
+                    {
+                        TitleId = p.TitleId,
+                        Name = p.Name,
+                        Artist = p.Artist
+                    }).ToList()
+                };
 
-            titleList.TotalTitles = titleList.Titles.Count;
+                titleList.TotalTitles = titleList.Titles.Count;
 
-            return View(titleList);
+                return View(titleList);
+            }
+            
         }
 
         public ActionResult TitleDetail(int id)
         {
-            var title = Titles.SingleOrDefault(p => p.TitleId == id);
-
-            if (title != null)
+            using (var comicbookContext = new ComicBookContext())
             {
-                var titleViewModel = new TitleViewModel
-                {
-                    TitleId = title.TitleId,
-                    Name = title.Name,
-                    Artist = title.Artist
-                };
+                var title = comicbookContext.Titles.SingleOrDefault(p => p.TitleId == id);
 
-                return View(titleViewModel);
+                if (title != null)
+                {
+                    var titleViewModel = new TitleViewModel
+                    {
+                        TitleId = title.TitleId,
+                        Name = title.Name,
+                        Artist = title.Artist
+                    };
+
+                    return View(titleViewModel);
+                }
+
             }
 
             return new HttpNotFoundResult();
@@ -72,53 +80,61 @@ namespace ComicBook.Controllers
             return View("AddEditTitle", titleViewModel);
         }
 
-        public ActionResult TitleEdit(int id)
+        [HttpPost]
+        public ActionResult AddTitle(TitleViewModel titleViewModel)
         {
-            var title = Titles.SingleOrDefault(p => p.TitleId == id);
-
-            if (title != null)
+            using (var comicbookContext = new ComicBookContext())
             {
-                var titleViewModel = new TitleViewModel
+                var title = new Title
                 {
-                    TitleId = title.TitleId,
-                    Name = title.Name,
-                    Artist = title.Artist
+                    //TitleId = nextTitleId,
+                    Name = titleViewModel.Name,
+                    Artist = titleViewModel.Artist
                 };
 
-                return View("AddEditTitle", titleViewModel);
+                comicbookContext.Titles.Add(title);
+                comicbookContext.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult TitleEdit(int id)
+        {
+            using (var comicbookContext = new ComicBookContext())
+            {
+                var title = comicbookContext.Titles.SingleOrDefault(p => p.TitleId == id);
+                if (title != null)
+                {
+                    var titleViewModel = new TitleViewModel
+                    {
+                        TitleId = title.TitleId,
+                        Name = title.Name,
+                        Artist = title.Artist
+                    };
+
+                    return View("AddEditTitle", titleViewModel);
+                }
             }
 
             return new HttpNotFoundResult();
         }
 
         [HttpPost]
-        public ActionResult AddTitle(TitleViewModel titleViewModel)
-        {
-            var nextTitleId = Titles.Max(p => p.TitleId) + 1;
-
-            var title = new Title
-            {
-                TitleId = nextTitleId,
-                Name = titleViewModel.Name,
-                Artist = titleViewModel.Artist
-            };
-
-            Titles.Add(title);
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
         public ActionResult EditTitle(TitleViewModel titleViewModel)
         {
-            var title = Titles.SingleOrDefault(p => p.TitleId == titleViewModel.TitleId);
-
-            if (title != null)
+            using (var comicbookContext = new ComicBookContext())
             {
-                title.Name = titleViewModel.Name;
-                title.Artist = titleViewModel.Artist;
+                var title = comicbookContext.Titles.SingleOrDefault(p => p.TitleId == titleViewModel.TitleId);
 
-                return RedirectToAction("Index");
+                if (title != null)
+                {
+                    title.Name = titleViewModel.Name;
+                    title.Artist = titleViewModel.Artist;
+                    comicbookContext.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
             }
 
             return new HttpNotFoundResult();
@@ -127,18 +143,20 @@ namespace ComicBook.Controllers
         [HttpPost]
         public ActionResult DeleteTitle(TitleViewModel titleViewModel)
         {
-            var title = Titles.SingleOrDefault(p => p.TitleId == titleViewModel.TitleId);
-
-            if (title != null)
+            using (var comicbookContext = new ComicBookContext())
             {
-                title.Name = titleViewModel.Name;
-                title.Artist = titleViewModel.Artist;
+                var title = comicbookContext.Titles.SingleOrDefault(p => p.TitleId == titleViewModel.TitleId);
 
-                return RedirectToAction("Index");
+                if (title != null)
+                {
+                    comicbookContext.Titles.Remove(title);
+                    comicbookContext.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
             }
 
             return new HttpNotFoundResult();
         }
-
     }
 }
