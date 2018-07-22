@@ -21,7 +21,7 @@
                     @Model.Titles[i].FullName
                 </td>
                 <td>
-                    @Html.ActionLink("Detail,", "TitleDetail", new { id = Model.Titles[i].TitleId })
+                    @Html.ActionLink("Detail", "TitleDetail", new { id = Model.Titles[i].TitleId })
                     | @Html.ActionLink("Edit", "TitleEdit", new { id = Model.Titles[i].TitleId })
                     | <a data-toggle="modal" href="@("#deleteTitleModal" + i)">Delete</a>
                     <div class="modal fade" id="@("deleteTitleModal" + i)" tabindex="-1" role="dialog">
