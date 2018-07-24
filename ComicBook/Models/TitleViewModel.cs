@@ -6,6 +6,7 @@ using System.ComponentModel;
 
 namespace ComicBook.Models
 {
+    //  Setting up the links to views.
     public class TitleViewModel
     {
         public int? TitleId { get; set; }

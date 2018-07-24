@@ -5,6 +5,7 @@ using System.Web;
 
 namespace ComicBook.Models
 {
+    // Creating the Title Name and Artist.
     public class Title
     {
         public int TitleId { get; set; }

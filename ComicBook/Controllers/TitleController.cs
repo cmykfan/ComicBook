@@ -12,21 +12,21 @@ namespace ComicBook.Controllers
         // GET: Title
         //public static List<Title> Titles = new List<Title>  Remove this now that we are adding to Database - Migrations.
         //{
-            //new Title { TitleId = 1, Name = "Hellboy", Artist = "Mike Mignola" },
-            //new Title { TitleId = 2, Name = "The Incredible Hulk", Artist = "Jack Kirby" },
-            //new Title { TitleId = 3, Name = "Spider-Man", Artist = "Steve Ditko" },
-            //new Title { TitleId = 4, Name = "X-Men", Artist = "John Byrne" },
-            //new Title { TitleId = 5, Name = "Airtight Garage", Artist = "Moebius" },
-            //new Title { TitleId = 6, Name = "Dr. Strange", Artist = "Steve Ditko" },
-            //new Title { TitleId = 7, Name = "Silver Surfer", Artist = "Ron Lim" },
-            //new Title { TitleId = 8, Name = "Warlock", Artist = "Jim Starlin" },
-            //new Title { TitleId = 9, Name = "Swamp Thing", Artist = "Steve Bissette" },
-            //new Title { TitleId = 10, Name = "Nexus", Artist = "Steve Rude" },
-            //new Title { TitleId = 11, Name = "Captain America", Artist = "Jack Kirby" },
-            //new Title { TitleId = 12, Name = "Sandman", Artist = "P. Craig Russell" },
-            //new Title { TitleId = 13, Name = "Concrete", Artist = "Paul Chadwick" },
-            //new Title { TitleId = 14, Name = "The Spirit", Artist = "Will Eisner" },
-            //new Title { TitleId = 15, Name = "Daredevil", Artist = "Frank Miller" }
+        //new Title { TitleId = 1, Name = "Hellboy", Artist = "Mike Mignola" },
+        //new Title { TitleId = 2, Name = "The Incredible Hulk", Artist = "Jack Kirby" },
+        //new Title { TitleId = 3, Name = "Spider-Man", Artist = "Steve Ditko" },
+        //new Title { TitleId = 4, Name = "X-Men", Artist = "John Byrne" },
+        //new Title { TitleId = 5, Name = "Airtight Garage", Artist = "Moebius" },
+        //new Title { TitleId = 6, Name = "Dr. Strange", Artist = "Steve Ditko" },
+        //new Title { TitleId = 7, Name = "Silver Surfer", Artist = "Ron Lim" },
+        //new Title { TitleId = 8, Name = "Warlock", Artist = "Jim Starlin" },
+        //new Title { TitleId = 9, Name = "Swamp Thing", Artist = "Steve Bissette" },
+        //new Title { TitleId = 10, Name = "Nexus", Artist = "Steve Rude" },
+        //new Title { TitleId = 11, Name = "Captain America", Artist = "Jack Kirby" },
+        //new Title { TitleId = 12, Name = "Sandman", Artist = "P. Craig Russell" },
+        //new Title { TitleId = 13, Name = "Concrete", Artist = "Paul Chadwick" },
+        //new Title { TitleId = 14, Name = "The Spirit", Artist = "Will Eisner" },
+        //new Title { TitleId = 15, Name = "Daredevil", Artist = "Frank Miller" }
         //};
 
         public ActionResult Index()
@@ -73,6 +73,7 @@ namespace ComicBook.Controllers
             return new HttpNotFoundResult();
         }
 
+        // The AddEditTitle link.
         public ActionResult TitleAdd()
         {
             var titleViewModel = new TitleViewModel();
@@ -80,6 +81,7 @@ namespace ComicBook.Controllers
             return View("AddEditTitle", titleViewModel);
         }
 
+        //Add title result
         [HttpPost]
         public ActionResult AddTitle(TitleViewModel titleViewModel)
         {
@@ -87,7 +89,7 @@ namespace ComicBook.Controllers
             {
                 var title = new Title
                 {
-                    //TitleId = nextTitleId,
+                    //TitleId = nextTitleId,  Don't need.
                     Name = titleViewModel.Name,
                     Artist = titleViewModel.Artist
                 };
@@ -99,6 +101,7 @@ namespace ComicBook.Controllers
             return RedirectToAction("Index");
         }
 
+        // Action result for Editing the title.
         public ActionResult TitleEdit(int id)
         {
             using (var comicbookContext = new ComicBookContext())
@@ -120,6 +123,7 @@ namespace ComicBook.Controllers
             return new HttpNotFoundResult();
         }
 
+        // Edit Title result.
         [HttpPost]
         public ActionResult EditTitle(TitleViewModel titleViewModel)
         {
@@ -140,6 +144,7 @@ namespace ComicBook.Controllers
             return new HttpNotFoundResult();
         }
 
+        // Delete Title result.
         [HttpPost]
         public ActionResult DeleteTitle(TitleViewModel titleViewModel)
         {

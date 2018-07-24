@@ -10,6 +10,7 @@ namespace ComicBook.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
+        // This is the good database that will work with migrations.
         protected override void Seed(ComicBookContext context)
         {
             context.Titles.AddOrUpdate(
