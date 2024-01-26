@@ -1,4 +1,10 @@
 # ComicBook
+Update 1/26/2024:  It's been a while since I looked at this app.  Definitely having issues with Windows 11 and VS 2022.
+I am working on this under Windows 10 and VS 2019.  Looks like I have an issue with MS.Net.Compilers 2.6.1 since it's
+depricated and no longer updating.   Looking into how to use MS.Net.Compilers.Toolset and work it into code.
+Fair warning, this may not work when viewing this project at this time.  I figure at least I can show my methods of
+working through a problem to get it resolved.
+
 A simple CRUD app built with Visual Studio, MVC, SQL, Entity Framework and C# using Localdb.  
 
 A comicbook database in which you can view titles/artists, edit, add or delete them.
